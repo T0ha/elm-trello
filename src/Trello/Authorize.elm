@@ -1,6 +1,5 @@
-module Trello exposing (..)
+module Trello.Authorize exposing (..)
 
-import OAuth
 import Navigation
 
 
@@ -9,7 +8,9 @@ type Expiration = Never
                 | Day
                 | Month 
 
+
 type ResponseType = Token | Fragment
+
 
 type alias Auth =
     { key : String
@@ -21,9 +22,11 @@ type alias Auth =
     , responce_type : ResponseType
     }
 
+
 type Scope = Read
            | Write
            | Account
+
 
 defaultAuth : String -> Auth
 defaultAuth key =

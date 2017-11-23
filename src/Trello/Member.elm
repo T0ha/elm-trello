@@ -1,4 +1,4 @@
-module Member exposing (..)
+module Trello.Member exposing (..)
 
 type Role = Admin 
           | Normal
@@ -8,7 +8,7 @@ type alias Member =
     , avatarHash : String
     , avatarSource : String
     , bio : String
-    , confirmed : Boolean
+    , confirmed : Bool
     , email : String
     , fullName : String
     , gravatarHash : String
