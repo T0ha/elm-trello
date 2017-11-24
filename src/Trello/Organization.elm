@@ -18,12 +18,18 @@ type alias Organization =
     , idBoards : List String
     , invited : Bool
     , invitations : List String
-    --, memberships : List Member
+    , memberships : List Membership
     , powerUps : List Int
     , website : String
     , url : String
     }
 
+type alias Membership =
+    { id : String
+    , idMember : String
+    , memberType : Trello.Member.Role
+    , unconfirmed : Bool
+    }
 
 get : Auth -> (Result Http.Error Organization -> msg) -> String -> Cmd msg
 get auth toMsg id =
@@ -41,7 +47,15 @@ decoder =
     |> required "idBoards" (list string)
     |> required "invited" bool
     |> required "invitations" (list string)
-    --|> required "memberships" list Member.decoder
+    |> required "memberships" (list membershipDecoder)
     |> required "powerUps" (list int)
     |> optional "website" string ""
     |> required "url" string
+
+membershipDecoder : Decoder Membership
+membershipDecoder =
+    decode Membership
+    |> required "id" string
+    |> required "idMember" string
+    |> required "memberType" Trello.Member.role
+    |> required "unconfirmed" bool

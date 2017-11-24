@@ -1,15 +1,21 @@
-module Board exposing (..)
+module Trello.Board exposing (..)
 
+import Http
+import Json.Decode exposing (string, bool, int, list, Decoder)
+import Json.Decode.Pipeline exposing (required, optional, decode)
+
+import Trello
+import Trello.Authorize exposing (Auth)
 
 
 type alias Board =
     { id: String
     , name : String
     , desc : String
-    , descData : Maybe String
-    , closed : Boolean
+    , descData : String
+    , closed : Bool
     , idOrganization : String
-    , pinned : Boolean
+    , pinned : Bool
     , url : String
     , shortUrl : String
     }
@@ -91,3 +97,22 @@ type alias Board =
     "black": "New Label!"
   }
 -} 
+
+
+get : Auth -> (Result Http.Error Board -> msg) -> String -> Cmd msg
+get auth toMsg id =
+    "/boards/" ++ id
+    |> Trello.get auth decoder toMsg
+
+decoder : Decoder Board
+decoder = 
+    decode Board
+    |> required "id" string
+    |> required "name" string
+    |> required "desc" string
+    |> optional "descData" string ""
+    |> required "closed" bool
+    |> required "idOrganization" string
+    |> required "pinned" bool
+    |> required "url" string
+    |> required "shortUrl" string
