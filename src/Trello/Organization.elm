@@ -31,10 +31,12 @@ type alias Membership =
     , unconfirmed : Bool
     }
 
+
 get : Auth -> (Result Http.Error Organization -> msg) -> String -> Cmd msg
 get auth toMsg id =
     "/organisations/" ++ id
     |> Trello.get auth decoder toMsg
+
 
 decoder : Decoder Organization
 decoder = 
