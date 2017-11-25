@@ -1,8 +1,13 @@
 module Trello.Label exposing (..)
 
+
 import Http
 import Json.Decode exposing (string, bool, int, list, Decoder)
 import Json.Decode.Pipeline exposing (required, optional, decode)
+
+import Trello
+import Trello.Authorize exposing (Auth)
+
 
 
 type alias Label =

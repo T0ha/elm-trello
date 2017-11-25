@@ -12,6 +12,8 @@ import Trello.Organization
 import Trello.Member
 import Trello.Board
 import Trello.Card
+import Trello.Label
+import Trello.TrelloList
 
 
 suite : Test
@@ -25,6 +27,12 @@ suite =
 
     , test "Card JSON from example" <|
         (\_ -> cardJSONExample)
+
+    , test "Label JSON from example" <|
+        (\_ -> labelJSONExample)
+
+    , test "List JSON from example" <|
+        (\_ -> listJSONExample)
  ]
 
 
@@ -597,4 +605,60 @@ cardJSONExample =
     in
         json
         |> decodeString Trello.Card.decoder
+        |> Expect.equal (Ok out)
+
+
+labelJSONExample : Expectation
+labelJSONExample =
+    let 
+        json =
+            """
+            {
+                "id": "560bf42919ad3a5dc29f33c5",
+                "idBoard": "560bf4298b3dda300c18d09c",
+                "name": "Visited",
+                "color": "green",
+                "uses": 15
+            }
+            """
+
+        out = 
+            { id = "560bf42919ad3a5dc29f33c5"
+                , idBoard = "560bf4298b3dda300c18d09c"
+                , name = "Visited"
+                -- , color = "green"
+                , uses = 15
+            }
+    in
+        json
+        |> decodeString Trello.Label.decoder
+        |> Expect.equal (Ok out)
+
+
+listJSONExample : Expectation
+listJSONExample =
+    let 
+        json =
+            """
+            {
+                "id": "560bf48efe2771efe9b45997",
+                "name": "Washington",
+                "closed": false,
+                "idBoard": "560bf4298b3dda300c18d09c",
+                "pos": 1638399,
+                "subscribed": false
+            }
+            """
+
+        out = 
+            { id = "560bf48efe2771efe9b45997"
+            , name = "Washington"
+            , closed = False
+            , idBoard = "560bf4298b3dda300c18d09c"
+            , pos = 1638399
+            , subscribed = False
+            }
+    in
+        json
+        |> decodeString Trello.TrelloList.decoder
         |> Expect.equal (Ok out)
