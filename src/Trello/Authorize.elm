@@ -1,6 +1,7 @@
 module Trello.Authorize exposing (..)
 
 import Navigation
+import QueryString as QS
 
 
 type Expiration
@@ -114,3 +115,10 @@ parse location auth =
 
         _ ->
             Err "Token parse error"
+
+
+appendQS : Auth -> QS.QueryString -> QS.QueryString
+appendQS auth qs =
+    qs
+        |> QS.add "key" auth.key
+        |> QS.add "token" auth.token
