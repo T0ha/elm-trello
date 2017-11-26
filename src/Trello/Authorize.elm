@@ -3,13 +3,16 @@ module Trello.Authorize exposing (..)
 import Navigation
 
 
-type Expiration = Never
-                | Hour
-                | Day
-                | Month 
+type Expiration
+    = Never
+    | Hour
+    | Day
+    | Month
 
 
-type ResponseType = Token | Fragment
+type ResponseType
+    = Token
+    | Fragment
 
 
 type alias Auth =
@@ -23,9 +26,10 @@ type alias Auth =
     }
 
 
-type Scope = Read
-           | Write
-           | Account
+type Scope
+    = Read
+    | Write
+    | Account
 
 
 defaultAuth : String -> Auth
@@ -39,54 +43,74 @@ defaultAuth key =
     , responce_type = Token
     }
 
-authorizeUrl : Auth -> String 
-authorizeUrl auth = 
-    let 
+
+authorizeUrl : Auth -> String
+authorizeUrl auth =
+    let
         expiration =
             case auth.expiration of
-                Never -> 
+                Never ->
                     "never"
+
                 Hour ->
                     "1hour"
+
                 Day ->
                     "1day"
+
                 Month ->
                     "30days"
 
-        scope s = case s of
-            Read ->
-                "read"
-            Write ->
-                "write"
-            Account ->
-                "account"
+        scope s =
+            case s of
+                Read ->
+                    "read"
 
-        scopes = auth.scope 
-                 |> List.map scope
-                 |> String.join ","
-        responce_type = case auth.responce_type of
-            Token ->
-                "token"
-            Fragment ->
-                "fragment"
+                Write ->
+                    "write"
+
+                Account ->
+                    "account"
+
+        scopes =
+            auth.scope
+                |> List.map scope
+                |> String.join ","
+
+        responce_type =
+            case auth.responce_type of
+                Token ->
+                    "token"
+
+                Fragment ->
+                    "fragment"
     in
         "https://trello.com/1/authorize?"
-        ++ "expiration=" ++ expiration 
-        ++ "&scope=" ++ scopes
-        ++ "&responce_type=" ++ responce_type
-        ++ "&key=" ++ auth.key 
-        ++ "&return_url=" ++ auth.returnUrl
+            ++ "expiration="
+            ++ expiration
+            ++ "&scope="
+            ++ scopes
+            ++ "&responce_type="
+            ++ responce_type
+            ++ "&key="
+            ++ auth.key
+            ++ "&return_url="
+            ++ auth.returnUrl
+
 
 authorize : Auth -> Cmd msg
 authorize auth =
     Navigation.load (authorizeUrl auth)
+
 
 parse : Navigation.Location -> Auth -> Result String Auth
 parse location auth =
     case String.split "=" location.hash of
         [] ->
             Ok auth
-        _ :: [token] ->
-                Ok {auth | token = Just token}
+
+        _ :: [ token ] ->
+            Ok { auth | token = Just token }
+
         _ ->
             Err "Token parse error"
