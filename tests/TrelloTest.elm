@@ -14,6 +14,7 @@ import Trello.Board
 import Trello.Card
 import Trello.Label
 import Trello.TrelloList
+import Trello.CheckList
 
 
 suite : Test
@@ -33,6 +34,9 @@ suite =
 
     , test "List JSON from example" <|
         (\_ -> listJSONExample)
+
+    , test "CheckList JSON from example" <|
+        (\_ -> checkListJSONExample)
  ]
 
 
@@ -661,4 +665,82 @@ listJSONExample =
     in
         json
         |> decodeString Trello.TrelloList.decoder
+        |> Expect.equal (Ok out)
+
+
+
+checkListJSONExample : Expectation
+checkListJSONExample =
+    let 
+        json =
+            """
+            {
+                "id": "5914b2923876e144b5cb6974",
+                "name": "Awesomeness to come",
+                "idBoard": "4d5ea62fd76aa1136000000c",
+                "idCard": "5914b27920508fcb6bfd525f",
+                "pos": 16384,
+                "checkItems": [
+                    {
+                        "state": "complete",
+                        "idChecklist": "5914b2923876e144b5cb6974",
+                        "id": "5914b29abcbe09ab9478d156",
+                        "name": "Custom Fields in CSV exports",
+                        "nameData": null,
+                        "pos": 16867
+                    },
+                    {
+        "state": "incomplete",
+        "idChecklist": "5914b2923876e144b5cb6974",
+        "id": "5914b2a1ee4421b88542b59a",
+        "name": "Custom Fields on mobile",
+        "nameData": null,
+        "pos": 34254
+    },
+    {
+        "state": "incomplete",
+        "idChecklist": "5914b2923876e144b5cb6974",
+        "id": "5914b2b2e01e5b17afedf6fc",
+        "name": "Working well across multiple boards",
+        "nameData": null,
+        "pos": 51540
+    }
+    ]
+            }
+            """
+
+        out = 
+            { id = "5914b2923876e144b5cb6974"
+            , name = "Awesomeness to come"
+            , idBoard = "4d5ea62fd76aa1136000000c"
+            , idCard = "5914b27920508fcb6bfd525f"
+            , pos = 16384
+            , checkItems = 
+                [
+                { state = Trello.CheckList.Complete
+                , idChecklist = "5914b2923876e144b5cb6974"
+                , id = "5914b29abcbe09ab9478d156"
+                , name = "Custom Fields in CSV exports"
+                -- , nameData = null
+                , pos = 16867
+                },
+                { state = Trello.CheckList.Incomplete
+                , idChecklist = "5914b2923876e144b5cb6974"
+                , id = "5914b2a1ee4421b88542b59a"
+                , name = "Custom Fields on mobile"
+                --, nameData = null
+                , pos = 34254
+                },
+                { state = Trello.CheckList.Incomplete
+                , idChecklist = "5914b2923876e144b5cb6974"
+                , id = "5914b2b2e01e5b17afedf6fc"
+                , name = "Working well across multiple boards"
+                -- , nameData = null
+                , pos = 51540
+                }
+                ]
+            }
+    in
+        json
+        |> decodeString Trello.CheckList.decoder
         |> Expect.equal (Ok out)
