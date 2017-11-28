@@ -1,4 +1,18 @@
-module Trello.Card exposing (..)
+module Trello.Card exposing (Card, get)
+
+{-| Represents Trello [Card](https://developers.trello.com/v1.0/reference#card-object) objest type and query.
+
+
+# Object type
+
+@docs Card
+
+
+# Functions
+
+@docs get
+
+-}
 
 import Http
 import Json.Decode exposing (andThen, succeed, string, bool, int, list, Decoder)
@@ -9,6 +23,8 @@ import Trello.Authorize exposing (Auth)
 import Trello.Label exposing (Label)
 
 
+{-| Card structure
+-}
 type alias Card =
     { id : String
 
@@ -54,9 +70,11 @@ type alias Card =
     }
 
 
+{-| Requests Trello API to get card
+-}
 get : Auth -> (Result Http.Error Card -> msg) -> String -> Cmd msg
 get auth toMsg id =
-    "/organisations/"
+    "/cards/"
         ++ id
         |> Trello.get auth decoder toMsg
 

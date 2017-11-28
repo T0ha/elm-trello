@@ -1,4 +1,18 @@
-module Trello.Board exposing (..)
+module Trello.Board exposing (Board, get)
+
+{-| Represents Trello [Board](https://developers.trello.com/v1.0/reference#board-object) object type and query.
+
+
+# Object type
+
+@docs Board
+
+
+# Functions
+
+@docs get
+
+-}
 
 import Http
 import Json.Decode exposing (string, bool, int, list, Decoder)
@@ -7,6 +21,8 @@ import Trello
 import Trello.Authorize exposing (Auth)
 
 
+{-| Boarg structure
+-}
 type alias Board =
     { id : String
     , name : String
@@ -101,6 +117,8 @@ type alias Board =
 -}
 
 
+{-| Requests Trello API to get board
+-}
 get : Auth -> (Result Http.Error Board -> msg) -> String -> Cmd msg
 get auth toMsg id =
     "/boards/"
@@ -108,6 +126,8 @@ get auth toMsg id =
         |> Trello.get auth decoder toMsg
 
 
+{-| Decoder for Board JSON
+-}
 decoder : Decoder Board
 decoder =
     decode Board

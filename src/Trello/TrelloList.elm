@@ -1,4 +1,18 @@
-module Trello.TrelloList exposing (..)
+module Trello.TrelloList exposing (TrelloList, get)
+
+{-| Represents Trello [List](https://developers.trello.com/v1.0/reference#list-object) object type and query.
+
+
+# Object type
+
+@docs TrelloList
+
+
+# Functions
+
+@docs get
+
+-}
 
 import Http
 import Date exposing (Date)
@@ -8,6 +22,8 @@ import Trello
 import Trello.Authorize exposing (Auth)
 
 
+{-| Trello List structure. (As List is built-in)
+-}
 type alias TrelloList =
     { id : String
     , name : String
@@ -18,6 +34,8 @@ type alias TrelloList =
     }
 
 
+{-| Requests Trello API to get list
+-}
 get : Auth -> (Result Http.Error TrelloList -> msg) -> String -> Cmd msg
 get auth toMsg id =
     "/lists/"

@@ -1,4 +1,18 @@
-module Trello.Organization exposing (..)
+module Trello.Organization exposing (Organization, Membership, get)
+
+{-| Represents Trello [Organization](https://developers.trello.com/v1.0/reference#organisation-object) object type and query.
+
+
+# Object types
+
+@docs Organization, Membership
+
+
+# Functions
+
+@docs get
+
+-}
 
 import Http
 import Date exposing (Date)
@@ -9,6 +23,8 @@ import Trello.Authorize exposing (Auth)
 import Trello.Member exposing (Member)
 
 
+{-| Organization structure
+-}
 type alias Organization =
     { id : String
     , billableMemberCount : Int
@@ -25,6 +41,8 @@ type alias Organization =
     }
 
 
+{-| Structure describing Organization Member
+-}
 type alias Membership =
     { id : String
     , idMember : String
@@ -33,6 +51,8 @@ type alias Membership =
     }
 
 
+{-| Requests Trello API to get organisation
+-}
 get : Auth -> (Result Http.Error Organization -> msg) -> String -> Cmd msg
 get auth toMsg id =
     "/organisations/"
@@ -40,6 +60,8 @@ get auth toMsg id =
         |> Trello.get auth decoder toMsg
 
 
+{-| Decoder for Label JSON
+-}
 decoder : Decoder Organization
 decoder =
     decode Organization

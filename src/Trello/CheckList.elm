@@ -1,4 +1,18 @@
-module Trello.CheckList exposing (..)
+module Trello.CheckList exposing (CheckList, ChecklistItem, ChecklistItemState(..), get)
+
+{-| Represents Trello [Label](https://developers.trello.com/v1.0/reference#checklist-object) objest type and query.
+
+
+# Object type
+
+@docs CheckList, ChecklistItem, ChecklistItemState
+
+
+# Functions
+
+@docs get
+
+-}
 
 import Http
 import Date exposing (Date)
@@ -8,6 +22,8 @@ import Trello
 import Trello.Authorize exposing (Auth)
 
 
+{-| CheckList structure
+-}
 type alias CheckList =
     { id : String
     , name : String
@@ -18,6 +34,8 @@ type alias CheckList =
     }
 
 
+{-| Checklist item structure
+-}
 type alias ChecklistItem =
     { state : ChecklistItemState
     , idChecklist : String
@@ -29,11 +47,15 @@ type alias ChecklistItem =
     }
 
 
+{-| Checklist item states
+-}
 type ChecklistItemState
     = Complete
     | Incomplete
 
 
+{-| Requests Trello API to get checklist
+-}
 get : Auth -> (Result Http.Error CheckList -> msg) -> String -> Cmd msg
 get auth toMsg id =
     "/checklists/"

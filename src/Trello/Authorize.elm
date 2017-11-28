@@ -6,14 +6,15 @@ module Trello.Authorize exposing (Auth, Expiration(..), ResponseType, Scope(..),
 # Types
 
 @docs Auth, Expiration, ResponseType, Scope
+@docs defaultAuth
 
 
-# Authorization
+# Getting Token
 
-@docs authorize, parse, defaultAuth
+@docs authorize, parse
 
 
-# Querying
+# Authorizing Requests to Trello
 
 @docs appendQS
 
@@ -61,7 +62,7 @@ type Scope
     | Account
 
 
-{-| Creates basic Auth structure for further usage.
+{-| Construct Auth structure from key and return URL.
 -}
 defaultAuth : String -> String -> Auth
 defaultAuth key returnUrl =
@@ -129,14 +130,14 @@ authorizeUrl auth =
             ++ auth.returnUrl
 
 
-{-| Sends authorize request to Trello.
+{-| Redirects the resource owner (user) to Trello server for authorization flow.
 -}
 authorize : Auth -> Cmd msg
 authorize auth =
     Navigation.load (authorizeUrl auth)
 
 
-{-| Parses redirect URL and gets token.
+{-| Parse the location looking for a parameters set by Trello server after redirecting the resource owner (user).
 -}
 parse : Navigation.Location -> Auth -> Result String Auth
 parse location auth =
@@ -151,7 +152,7 @@ parse location auth =
             Err "Token parse error"
 
 
-{-| Adds authorization data to query string for requesting Trello.
+{-| Adds authorization data to query string for authenticating Trello request.
 -}
 appendQS : Auth -> QS.QueryString -> QS.QueryString
 appendQS auth qs =
