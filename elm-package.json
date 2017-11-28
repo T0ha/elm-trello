@@ -1,12 +1,20 @@
 {
     "version": "1.0.0",
     "summary": "Trello REASTful API wrapper for Elm.",
-    "repository": "https://github.com/T0ha/elm-trello",
+    "repository": "https://github.com/T0ha/elm-trello.git",
     "license": "BSD3",
     "source-directories": [
-        "."
+        "src"
     ],
-    "exposed-modules": [],
+    "exposed-modules": [
+        "Trello.Authorize"
+        , "Trello.Board"
+        , "Trello.Card"
+        , "Trello.CheckList"
+        , "Trello.Label"
+        , "Trello.Organization"
+        , "Trello.TrelloList"
+    ],
     "dependencies": {
         "Bogdanp/elm-querystring": "1.0.0 <= v < 2.0.0",
         "NoRedInk/elm-decode-pipeline": "3.0.0 <= v < 4.0.0",

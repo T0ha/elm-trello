@@ -1,5 +1,8 @@
 module Trello exposing (..)
 
+{-| Helper module used by other modules internally.
+-}
+
 import Http
 import Json.Decode exposing (Decoder)
 import QueryString as QS
@@ -16,9 +19,11 @@ get auth decoder toMsg path =
     let
         qs =
             QS.empty
+                |> Trello.Authorize.appendQS auth
+                |> QS.render
 
         url =
-            baseUrl ++ path ++ Trello.Authorize.qs auth qs
+            baseUrl ++ path ++ qs
     in
         Http.get url decoder
             |> Http.send toMsg
