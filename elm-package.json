@@ -13,6 +13,7 @@
         , "Trello.CheckList"
         , "Trello.Label"
         , "Trello.Organization"
+        , "Trello.Member"
         , "Trello.TrelloList"
     ],
     "dependencies": {

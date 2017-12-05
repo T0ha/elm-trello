@@ -141,8 +141,8 @@ authorize auth =
 -}
 parse : Navigation.Location -> Auth -> Result String Auth
 parse location auth =
-    case String.split "=" location.hash of
-        [] ->
+    case String.split "=" (Debug.log "location:" location.hash) of
+        [ "" ] ->
             Ok auth
 
         _ :: [ token ] ->

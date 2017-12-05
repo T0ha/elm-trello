@@ -19,6 +19,7 @@ get auth decoder toMsg path =
     let
         qs =
             QS.empty
+                |> QS.add "fields" "all"
                 |> Trello.Authorize.appendQS auth
                 |> QS.render
 

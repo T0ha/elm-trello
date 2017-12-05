@@ -1,4 +1,4 @@
-module Trello.Organization exposing (Organization, Membership, get)
+module Trello.Organization exposing (Organization, Membership, get, getForMember)
 
 {-| Represents Trello [Organization](https://developers.trello.com/v1.0/reference#organisation-object) object type and query.
 
@@ -10,7 +10,7 @@ module Trello.Organization exposing (Organization, Membership, get)
 
 # Functions
 
-@docs get
+@docs get, getForMember
 
 -}
 
@@ -55,9 +55,19 @@ type alias Membership =
 -}
 get : Auth -> (Result Http.Error Organization -> msg) -> String -> Cmd msg
 get auth toMsg id =
-    "/organisations/"
+    "/organizations/"
         ++ id
         |> Trello.get auth decoder toMsg
+
+
+{-| Requests Trello API to get organizations for member by its id
+-}
+getForMember : Auth -> (Result Http.Error (List Organization) -> msg) -> String -> Cmd msg
+getForMember auth toMsg memberId =
+    "/members/"
+        ++ memberId
+        ++ "/organizations"
+        |> Trello.get auth (list decoder) toMsg
 
 
 {-| Decoder for Label JSON

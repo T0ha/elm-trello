@@ -21,7 +21,7 @@ import Trello
 import Trello.Authorize exposing (Auth)
 
 
-{-| Boarg structure
+{-| Board structure
 -}
 type alias Board =
     { id : String

@@ -1,14 +1,28 @@
 module Trello.Member exposing (..)
 
+{-| Represents Trello [Member](https://developers.trello.com/v1.0/reference#member-object) object type and query.
+
+
+# Object type
+
+@docs Member, Role
+
+
+# Functions
+
+@docs get, role, decoder, getForOrganization
+
+-}
+
+import Http
 import Json.Decode exposing (field, andThen, succeed, string, bool, int, list, Decoder)
 import Json.Decode.Pipeline exposing (required, optional, decode)
+import Trello
+import Trello.Authorize exposing (Auth)
 
 
-type Role
-    = Admin
-    | Normal
-
-
+{-| Member structure
+-}
 type alias Member =
     { id : String
     , avatarHash : String
@@ -31,28 +45,56 @@ type alias Member =
     }
 
 
+{-| Member type (role) enumerable
+-}
+type Role
+    = Admin
+    | Normal
+
+
+{-| Requests Trello API to get member
+-}
+get : Auth -> (Result Http.Error Member -> msg) -> String -> Cmd msg
+get auth toMsg id =
+    "/members/"
+        ++ id
+        |> Trello.get auth decoder toMsg
+
+
+{-| Requests Trello API to get members for organization by its id
+-}
+getForOrganization : Auth -> (Result Http.Error (List Member) -> msg) -> String -> Cmd msg
+getForOrganization auth toMsg organizationId =
+    "/organizations/"
+        ++ organizationId
+        ++ "/members"
+        |> Trello.get auth (list decoder) toMsg
+
+
 decoder : Decoder Member
 decoder =
     decode Member
         |> required "id" string
-        |> required "avatarHash" string
+        |> optional "avatarHash" string ""
         |> optional "avatarSource" string ""
-        |> required "url" string
+        |> optional "url" string ""
         |> required "username" string
-        |> required "bio" string
+        |> optional "bio" string ""
         |> required "confirmed" bool
         |> optional "email" string ""
-        |> required "fullName" string
+        |> optional "fullName" string ""
         |> optional "gravatarHash" string ""
-        |> required "idBoards" (list string)
-        |> required "idOrganizations" (list string)
-        |> required "idEnterprisesAdmin" (list string)
-        |> required "idPremOrgsAdmin" (list string)
+        |> optional "idBoards" (list string) []
+        |> optional "idOrganizations" (list string) []
+        |> optional "idEnterprisesAdmin" (list string) []
+        |> optional "idPremOrgsAdmin" (list string) []
         |> required "initials" string
         --|> required "loginTypes" list
-        |> required "memberType" role
+        |> optional "memberType" role Normal
 
 
+{-| Role JSON decoder
+-}
 role : Decoder Role
 role =
     let

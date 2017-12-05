@@ -1,4 +1,4 @@
-module Trello.Card exposing (Card, get)
+module Trello.Card exposing (Card, get, getForMember)
 
 {-| Represents Trello [Card](https://developers.trello.com/v1.0/reference#card-object) objest type and query.
 
@@ -10,7 +10,7 @@ module Trello.Card exposing (Card, get)
 
 # Functions
 
-@docs get
+@docs get, getForMember
 
 -}
 
@@ -77,6 +77,16 @@ get auth toMsg id =
     "/cards/"
         ++ id
         |> Trello.get auth decoder toMsg
+
+
+{-| Requests Trello API to get cards for meneber with id
+-}
+getForMember : Auth -> (Result Http.Error (List Card) -> msg) -> String -> Cmd msg
+getForMember auth toMsg id =
+    "/members/"
+        ++ id
+        ++ "/cards/"
+        |> Trello.get auth (list decoder) toMsg
 
 
 decoder : Decoder Card
