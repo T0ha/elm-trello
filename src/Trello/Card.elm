@@ -15,7 +15,7 @@ module Trello.Card exposing (Card, get, getForMember)
 -}
 
 import Http
-import Json.Decode exposing (andThen, succeed, string, bool, int, list, Decoder)
+import Json.Decode exposing (andThen, succeed, string, bool, float, int, list, Decoder)
 import Json.Decode.Pipeline exposing (required, optional, decode)
 import Date exposing (Date, fromString)
 import Trello
@@ -62,7 +62,7 @@ type alias Card =
     , labels : List Label
     , idLabels : List String
     , name : String
-    , pos : Int
+    , pos : Float
     , shortLink : String
     , shortUrl : String
     , subscribed : Bool
@@ -105,12 +105,12 @@ decoder =
         |> required "idMembers" (list string)
         |> required "idMembersVoted" (list string)
         |> required "idShort" int
-        |> required "idAttachmentCover" string
+        |> optional "idAttachmentCover" string ""
         |> required "manualCoverAttachment" bool
         |> required "labels" (list Trello.Label.decoder)
         |> required "idLabels" (list string)
         |> required "name" string
-        |> required "pos" int
+        |> required "pos" float
         |> required "shortLink" string
         |> required "shortUrl" string
         |> required "subscribed" bool
